@@ -1,5 +1,5 @@
 # basic_laravel_lnmp
-A basic laravel web server install package in Ubuntu 18(Nginx+MariaDB+php7.2)
+A basic laravel web server install package in Ubuntu 18 and Ubuntu 16,17(Nginx+MariaDB+php7.2)
 
 Install basic lnmp server for laravel:
 ```
