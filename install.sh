@@ -13,7 +13,7 @@ else
         sudo apt-get update
 fi
 
-sudo apt install php7.2 php7.2-curl php7.2-common php7.2-cli php7.2-mysql php7.2-mbstring php7.2-fpm php7.2-xml php7.2-zip -y
+sudo apt install php7.2 php7.2-curl php7.2-common php7.2-cli php7.2-mysql php7.2-mbstring php7.2-fpm php7.2-gd php7.2-xml php7.2-zip -y
 sudo apt install nginx -y
 sudo apt install unzip curl -y
 sudo apt install mariadb-server -y
@@ -22,9 +22,9 @@ curl -sS https://getcomposer.org/installer | sudo php -- --install-dir=/usr/loca
 sudo mysql_secure_installation
 
 cd /var/www/
-composer create-project --prefer-dist laravel/laravel laravel
+#change to your git repository if doesn't need default laravel project
 sudo composer create-project --prefer-dist laravel/laravel laravel
-sudo cp laravel.conf /etc/nginx/sites-available/
+sudo cp ./laravel.conf /etc/nginx/sites-available/
 sudo ln -s /etc/nginx/sites-available/laravel.conf /etc/nginx/sites-enabled/
 sudo rm /etc/nginx/sites-available/default
 sudo rm /etc/nginx/sites-enabled/default
