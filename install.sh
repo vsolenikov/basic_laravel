@@ -24,7 +24,7 @@ sudo mysql_secure_installation
 
 cd /var/www/
 #change to your git repository if doesn't need default laravel project
-sudo composer create-project --prefer-dist laravel/laravel laravel
+sudo git clone https://SolenikovVladimir@bitbucket.org/cryptoprof/crm-new.git laravel
 sudo rm /etc/nginx/sites-available/default
 sudo rm /etc/nginx/sites-enabled/default
 sudo service nginx restart
