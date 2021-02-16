@@ -1,5 +1,8 @@
 #!/bin/bash
 
+userMysql = "users"
+passwordMysql = "password"
+
 currentver="$(lsb_release -r -s)"
 requiredver="18.00"
 #check Ubuntu version
@@ -13,7 +16,9 @@ else
         sudo apt-get update
 fi
 
-sudo apt install php7.3 php7.3-curl php7.3-common php7.3-cli php7.3-mysql php7.3-mbstring php7.3-fpm php7.3-gd php7.3-xml php7.3-zip -y
+sudo add-apt-repository -y ppa:ondrej/php
+sudo apt-get update
+sudo apt-get install php7.3 php7.3-curl php7.3-common php7.3-cli php7.3-mysql php7.3-mbstring php7.3-fpm php7.3-gd php7.3-xml php7.3-zip -y
 sudo apt install nginx -y
 sudo apt install unzip curl -y
 sudo apt install mariadb-server -y
@@ -29,5 +34,18 @@ sudo rm /etc/nginx/sites-available/default
 sudo rm /etc/nginx/sites-enabled/default
 sudo service nginx restart
 nginx -t
+
+cd /var/www/laravel
+sudo composer install
+sudo cp env_example .env
 sudo chown -R www-data:www-data /var/www/laravel/
 sudo chmod -R 755 /var/www/laravel/
+sudo mysql <<EOF
+CREATE DATABASE laravel;
+CREATE USER '$userMysql'@'localhost' identified by '$passwordMysql';
+USE laravel;
+GRANT ALL PRIVILEGES ON laravel to '$userMysql'@'localhost';
+FLUSH PRIVILEGES;
+EOF
+
+
