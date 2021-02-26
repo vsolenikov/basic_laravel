@@ -1,7 +1,7 @@
 #!/bin/bash
 
-userMysql = "users"
-passwordMysql = "password"
+export usr='nameUser'
+export pas='passwordUser'
 
 currentver="$(lsb_release -r -s)"
 requiredver="18.00"
@@ -12,8 +12,6 @@ else
         #if vesion less than 18.04 add aditional repository for php7.3 . In oldest version of Ubuntu php7.0 by default
         echo "Less than 18.04"
         sudo apt-get install software-properties-common python-software-properties
-        sudo add-apt-repository -y ppa:ondrej/php
-        sudo apt-get update
 fi
 
 sudo add-apt-repository -y ppa:ondrej/php
@@ -38,14 +36,34 @@ nginx -t
 cd /var/www/laravel
 sudo composer install
 sudo cp env_example .env
-sudo chown -R www-data:www-data /var/www/laravel/
-sudo chmod -R 755 /var/www/laravel/
-sudo mysql <<EOF
+
+sudo cp .env /var/basic_laravel_lnmp/
+cd ../../basic_laravel_lnmp/
+
+sed -e "s/\${dbuser}/$usr/" -e "s/\${dbpass}/$pas/" .env > enver.txt
+sudo chmod -R 755 /var/basic_laravel_lnmp/
+sudo cp enver.txt /var/www/laravel
+
+cd /var/www/laravel
+sudo rm .env
+sudo cp enver.txt .env
+sudo rm enver.txt
+cd /var/basic_laravel_lnmp
+
+sudo mysql -u root -pvova200027 << EOF
 CREATE DATABASE laravel;
-CREATE USER '$userMysql'@'localhost' identified by '$passwordMysql';
+CREATE USER '$usr'@'localhost' identified by '$pas';
+EOF
+
+sudo mysql -u root -pvova200027 << EOF
 USE laravel;
-GRANT ALL PRIVILEGES ON laravel to '$userMysql'@'localhost';
+GRANT ALL PRIVILEGES ON laravel to '$usr'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
+sudo rm .env
+sudo rm enver.txt
+
+sudo chown -R www-data:www-data /var/www/laravel/
+sudo chmod -R 755 /var/www/laravel/
 
