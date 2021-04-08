@@ -1,7 +1,11 @@
 #!/bin/bash
 
+#======---Данные пользователя---======
+
 export usr='nameUser'
 export pas='passwordUser'
+
+#======-------------------------======
 
 currentver="$(lsb_release -r -s)"
 requiredver="18.00"
@@ -13,7 +17,7 @@ else
         echo "Less than 18.04"
         sudo apt-get install software-properties-common python-software-properties
 fi
-
+sudo apt-get install software-properties-common python-software-properties
 sudo add-apt-repository -y ppa:ondrej/php
 sudo apt-get update
 sudo apt-get install php7.3 php7.3-curl php7.3-common php7.3-cli php7.3-mysql php7.3-mbstring php7.3-fpm php7.3-gd php7.3-xml php7.3-zip -y
@@ -38,14 +42,14 @@ sudo composer install
 sudo cp env_example .env
 
 sudo cp .env /var/basic_laravel_lnmp/
-cd ../../basic_laravel_lnmp/
+cd /var/basic_laravel_lnmp/
 
 sed -e "s/\${dbuser}/$usr/" -e "s/\${dbpass}/$pas/" .env > enver.txt
-sudo chmod -R 755 /var/basic_laravel_lnmp/
-sudo cp enver.txt /var/www/laravel
 
+sudo cp enver.txt /var/www/laravel
+sudo chmod -R 755 /var/basic_laravel_lnmp/
 cd /var/www/laravel
-sudo rm .env
+
 sudo cp enver.txt .env
 sudo rm enver.txt
 cd /var/basic_laravel_lnmp
@@ -57,13 +61,18 @@ EOF
 
 sudo mysql -u root -pvova200027 << EOF
 USE laravel;
-GRANT ALL PRIVILEGES ON laravel to '$usr'@'localhost';
+GRANT ALL PRIVILEGES ON laravel.* to '$usr'@'localhost';
 FLUSH PRIVILEGES;
 EOF
 
-sudo rm .env
+cd /var/www/laravel
+sudo php artisan migrate:fresh --seed
+
 sudo rm enver.txt
 
 sudo chown -R www-data:www-data /var/www/laravel/
 sudo chmod -R 755 /var/www/laravel/
 
+sudo php artisan key:generate
+sudo chown -R www-data:www-data /var/www/laravel/
+sudo chmod -R 755 /var/www/laravel/
